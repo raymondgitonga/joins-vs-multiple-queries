@@ -3,10 +3,10 @@
 
 default: build
 
-docker-compose-down:
+make-down:
 	docker-compose down
 
-docker-compose-up:
+make-up:
 	docker-compose up -d
 
 tests:
@@ -23,4 +23,6 @@ format:
 
 linter: format ci_lint
 
-build: docker-compose-up run
+restart: make-down make-up run
+
+build: make-up run
