@@ -29,7 +29,29 @@ func (s *ProductService) GetProductJoin(ctx context.Context, productID int) (*do
 	return product, nil
 }
 
-func (s *ProductService) GetProduct(ctx context.Context, productID int) (*dormain.Product, error) {
+func (s *ProductService) GetProductSync(ctx context.Context, productID int) (*dormain.Product, error) {
+	product, err := s.productRepo.GetProduct(ctx, productID)
+	if err != nil {
+		return nil, err
+	}
+
+	quantity, err := s.productRepo.GetProductQuantity(ctx, productID)
+	if err != nil {
+		return nil, err
+	}
+
+	category, err := s.productRepo.GetProductCategory(ctx, productID)
+	if err != nil {
+		return nil, err
+	}
+
+	product.Quantity = quantity
+	product.CategoryID = category
+
+	return product, nil
+}
+
+func (s *ProductService) GetProductAsync(ctx context.Context, productID int) (*dormain.Product, error) {
 	product, err := s.productRepo.GetProduct(ctx, productID)
 	if err != nil {
 		return nil, err
@@ -50,3 +72,7 @@ func (s *ProductService) GetProduct(ctx context.Context, productID int) (*dormai
 
 	return product, nil
 }
+
+//func (s *ProductService) GetProductSync(ctx context.Context, productID int) (*dormain.Product, error) {
+//
+//}

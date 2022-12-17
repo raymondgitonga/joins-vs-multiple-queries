@@ -22,13 +22,14 @@ func NewProductRepository(db *sql.DB) (*ProductRepository, error) {
 
 func (r *ProductRepository) GetProductJoin(ctx context.Context, productID int) (*dormain.Product, error) {
 	product := &dormain.Product{}
-	query := `select product_catalog.name, product_catalog.price, product_quantity.quantity, product_category.name
-              from product_catalog join product_quantity on product_catalog.id = product_quantity.catalog_id
-              join product_category on product_catalog.category_id = product_category.id where product_catalog.id = $1;`
+	query := `select product_catalog.name, product_catalog.price, product_quantity.quantity, product_catalog_category.category_id
+			  from product_catalog join product_quantity on product_catalog.id = product_quantity.catalog_id
+         	  join product_catalog_category on product_catalog_category.catalog_id = product_catalog.id
+              where product_catalog.id = $1;`
 
 	row := r.db.QueryRowContext(ctx, query, productID)
 
-	err := row.Scan(&product.Name, &product.Price, &product.Quantity, &product.Category)
+	err := row.Scan(&product.Name, &product.Price, &product.Quantity, &product.CategoryID)
 	if err != nil {
 		return nil, fmt.Errorf("error fetching product, %w", err)
 	}

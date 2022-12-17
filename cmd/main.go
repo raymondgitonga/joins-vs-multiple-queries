@@ -67,14 +67,14 @@ func main() {
 		return
 	}
 
-	fmt.Println(product)
+	fmt.Println("JOIN: ", product)
 
-	product, err = sv.GetProductJoin(context.Background(), 1)
+	product, err = sv.GetProductSync(context.Background(), 1)
 
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	fmt.Println(product)
+	fmt.Println("SYNC", product)
 }
