@@ -10,10 +10,7 @@ make-up:
 	docker-compose up -d
 
 tests:
-	go test -v ./... | { grep -v 'no test files'; true; }
-
-run:
-	go run ./cmd
+	go test -bench=. -v ./... | { grep -v 'no test files'; true; }
 
 ci_lint:
 	golangci-lint run ./... --fix
@@ -23,6 +20,6 @@ format:
 
 linter: format ci_lint
 
-restart: make-down make-up run
+restart: make-down make-up
 
-build: make-up run
+benchmark: make-up tests

@@ -17,6 +17,24 @@ import (
 //go:embed migrations/*.sql
 var fs embed.FS
 
+type AppConfigs struct {
+	DbURL  string
+	DbName string
+}
+
+func NewAppConfigs(dbURL, dbName string) (*AppConfigs, error) {
+	if dbURL == "" {
+		return nil, fmt.Errorf("kindly provide dbURL")
+	}
+	if dbName == "" {
+		return nil, fmt.Errorf("kindly provide dbName")
+	}
+	return &AppConfigs{
+		DbURL:  dbURL,
+		DbName: dbName,
+	}, nil
+}
+
 type ConnectionPoolConfig struct {
 	maxOpenConns    int
 	maxIdleConns    int
@@ -33,7 +51,7 @@ func NewConnectionPoolConfig() ConnectionPoolConfig {
 	}
 }
 
-func NewClient(ctx context.Context, connectionDSN string) (*sql.DB, error) {
+func (c *AppConfigs) NewClient(ctx context.Context, connectionDSN string) (*sql.DB, error) {
 	db, err := sql.Open("postgres", connectionDSN)
 	if err != nil {
 		return nil, fmt.Errorf("error opening database connection: %w", err)
@@ -53,7 +71,7 @@ func NewClient(ctx context.Context, connectionDSN string) (*sql.DB, error) {
 	return db, nil
 }
 
-func RunMigrations(db *sql.DB, dbName string) error {
+func (c *AppConfigs) RunMigrations(db *sql.DB) error {
 	sourceInstance, err := iofs.New(fs, "migrations")
 	if err != nil {
 		return fmt.Errorf("sourceInstance error: %w", err)
@@ -64,7 +82,7 @@ func RunMigrations(db *sql.DB, dbName string) error {
 		return fmt.Errorf("targetInstance error: %w", err)
 	}
 
-	migrations, err := migrate.NewWithInstance("migrations", sourceInstance, dbName, targetInstance)
+	migrations, err := migrate.NewWithInstance("migrations", sourceInstance, c.DbName, targetInstance)
 	if err != nil {
 		return fmt.Errorf("migrate.NewWithInstance error: %w", err)
 	}
