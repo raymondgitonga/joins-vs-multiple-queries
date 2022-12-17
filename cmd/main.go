@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/raymondgitonga/joins-vs-multiple-queries/internal/adapters/db"
+	"github.com/raymondgitonga/joins-vs-multiple-queries/internal/core/repository"
+	service2 "github.com/raymondgitonga/joins-vs-multiple-queries/internal/core/service"
 	"log"
 	"os"
 )
@@ -50,4 +52,29 @@ func main() {
 		log.Println(err)
 		return
 	}
+
+	repo, err := repository.NewProductRepository(dbClient)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	sv := service2.NewProductService(repo)
+	product, err := sv.GetProductJoin(context.Background(), 1)
+
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	fmt.Println(product)
+
+	product, err = sv.GetProductJoin(context.Background(), 1)
+
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	fmt.Println(product)
 }
