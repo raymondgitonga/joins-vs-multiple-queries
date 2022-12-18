@@ -11,7 +11,7 @@
 
 ### Database
 
-<img src="tables.png" alt="drawing" width="600"/>
+<img src="tables.png" alt="drawing" width="900"/>
 
 ### What is tested
 
@@ -29,6 +29,6 @@ Environment: Macbook Pro, M1 Pro, 32GB RAM
 3. Making three different calls sync was the slowest at around 5964640 ns/op
 
 
-Using Joins was 53% faster than making 3 calls async and 78% Faster than making 3 different calls sync
+Using Joins was 54% faster than making 3 calls async and 78% Faster than making 3 different calls sync
 
 ** Note this test only fetches one product and not multiple

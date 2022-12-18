@@ -33,8 +33,6 @@ func BenchmarkProductService_GetProduct(b *testing.B) {
 
 	serv := service.NewProductService(repo)
 
-	// 74% Faster than joins sync
-	// 56% Faster than joins async
 	b.Run("Performance using joins", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			product, err := serv.GetProductJoin(context.Background(), 1)
