@@ -11,7 +11,7 @@
 
 ### Database
 
-<img src="tables.png" alt="drawing" width="450"/>
+<img src="db.png" alt="drawing" width="450"/>
 
 ### What is tested
 
